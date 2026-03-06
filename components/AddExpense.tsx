@@ -10,10 +10,10 @@ export default function AddExpense({ refresh }: any) {
   const handleSubmit = async (e:any)=>{
     e.preventDefault();
 
-    const email = localStorage.getItem("spend_email");
+    const email = localStorage.getItem("email");
 
     await fetch(
-      "http://localhost:8080/api/expenses/add-expense",
+      "https://system-backend-hprl.onrender.com/api/expenses/add-expense",
       {
         method:"POST",
         headers:{

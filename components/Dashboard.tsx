@@ -1,45 +1,62 @@
 "use client";
 
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function Dashboard(){
+export default function Dashboard() {
 
-  const [expenses,setExpenses] = useState([]);
-  const [total,setTotal] = useState(0);
+  const [expenses, setExpenses] = useState<any[]>([]);
+  const [total, setTotal] = useState(0);
 
-  const fetchData = async ()=>{
+  const fetchData = async () => {
 
-    const email = localStorage.getItem("spend_email");
+    const email = localStorage.getItem("email");
 
+    if (!email) return;
+
+    // FETCH TOTAL
     const totalRes = await fetch(
-      `http://localhost:8080/api/expenses/today-total?email=${email}`
+      "https://system-backend-hprl.onrender.com/api/expenses/today-total",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email })
+      }
     );
+
     const totalData = await totalRes.json();
 
+    // FETCH EXPENSE LIST
     const listRes = await fetch(
-      `http://localhost:8080/api/expenses/today-expenses?email=${email}`
+      "https://system-backend-hprl.onrender.com/api/expenses/today-expenses",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email })
+      }
     );
+
     const listData = await listRes.json();
 
     setTotal(totalData.totalSpent || 0);
     setExpenses(listData.data || []);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchData();
-  },[]);
-
-  const deleteExpense = async(id:string)=>{
-
-    await fetch(
-      `http://localhost:8080/api/expenses/delete-expense/${id}`,
-      {method:"DELETE"}
-    );
-
+  }, []);
+  const deleteExpense = async (id: string) => {
+    await fetch(`https://system-backend-hprl.onrender.com/api/expenses/delete-expense/${id}`, {
+      method: "DELETE",
+    });
+  
     fetchData();
   };
 
-  return(
+  return (
 
     <div className="space-y-4">
 
@@ -61,7 +78,13 @@ export default function Dashboard(){
           Today's Expenses
         </h2>
 
-        {expenses.map((e:any)=>(
+        {expenses.length === 0 && (
+          <p className="text-gray-400">
+            No expenses today
+          </p>
+        )}
+
+        {expenses.map((e: any) => (
 
           <div
             key={e._id}
@@ -85,7 +108,7 @@ export default function Dashboard(){
               </span>
 
               <button
-                onClick={()=>deleteExpense(e._id)}
+                onClick={() => deleteExpense(e._id)}
                 className="text-red-500"
               >
                 Delete

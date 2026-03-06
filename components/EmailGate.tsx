@@ -8,7 +8,7 @@ export default function EmailGate({ onSetEmail }: any) {
   const handleSubmit = (e:any)=>{
     e.preventDefault();
 
-    localStorage.setItem("spend_email",email);
+    localStorage.setItem("email",email);
     onSetEmail(email);
   }
 
