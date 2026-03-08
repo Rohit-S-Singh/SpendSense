@@ -112,7 +112,7 @@ export default function Dashboard() {
     <div className="min-h-screen flex flex-col items-center p-6 space-y-6">
 
       <h1 className="text-3xl font-bold text-indigo-600">
-        SpendSklnlkense
+        Spendsensee
       </h1>
 
       {/* EMAIL CARD */}
